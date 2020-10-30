@@ -11,10 +11,10 @@ import 'package:wechat_kit/wechat_kit.dart';
 
 void main() => runApp(MyApp());
 
-const String WECHAT_APPID = 'wx854345270316ce6e';
-const String WECHAT_UNIVERSAL_LINK = null; // iOS 请配置
-const String WECHAT_APPSECRET = 'ce4c6c4f007cf10baad3f600da16aa8e';
-const String WECHAT_MINIAPPID = 'gh_wxd930ea5d5a258f4f';
+const String WECHAT_APPID = 'your wechat appId';
+const String WECHAT_UNIVERSAL_LINK = 'your wechat universal link'; // iOS 请配置
+const String WECHAT_APPSECRET = 'your wechat appSecret';
+const String WECHAT_MINIAPPID = 'your wechat miniAppId';
 
 class MyApp extends StatelessWidget {
   @override
@@ -78,18 +78,14 @@ class _HomeState extends State<Home> {
 
   @override
   void dispose() {
-    if (_auth != null) {
-      _auth.cancel();
-    }
-    if (_share != null) {
-      _share.cancel();
-    }
-    if (_pay != null) {
-      _pay.cancel();
-    }
-    if (_miniProgram != null) {
-      _miniProgram.cancel();
-    }
+    _auth?.cancel();
+    _auth = null;
+    _share?.cancel();
+    _share = null;
+    _pay?.cancel();
+    _pay = null;
+    _miniProgram?.cancel();
+    _miniProgram = null;
     super.dispose();
   }
 
@@ -97,7 +93,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('WechatKit Demo'),
+        title: const Text('Wechat Kit Demo'),
       ),
       body: ListView(
         children: <Widget>[
@@ -121,12 +117,11 @@ class _HomeState extends State<Home> {
           ListTile(
             title: const Text('扫码登录'),
             onTap: () {
-              Navigator.of(context).push(MaterialPageRoute<dynamic>(
+              Navigator.of(context).push<void>(MaterialPageRoute<dynamic>(
                 builder: (BuildContext context) => Qrauth(
                   wechat: _wechat,
                 ),
               ));
-              ;
             },
           ),
           ListTile(
@@ -200,6 +195,38 @@ class _HomeState extends State<Home> {
             },
           ),
           ListTile(
+            title: const Text('文件分享'),
+            onTap: () async {
+              OkHttpClient client = OkHttpClientBuilder().build();
+              Response resp = await client
+                  .newCall(RequestBuilder()
+                      .get()
+                      .url(HttpUrl.parse(
+                          'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf'))
+                      .build())
+                  .enqueue();
+              if (resp.isSuccessful()) {
+                Directory saveDir = Platform.isAndroid
+                    ? await path_provider.getExternalStorageDirectory()
+                    : await path_provider.getApplicationDocumentsDirectory();
+                File saveFile = File(path.join(saveDir.path, 'demo.pdf'));
+                if (!saveFile.existsSync()) {
+                  saveFile.createSync(recursive: true);
+                  saveFile.writeAsBytesSync(
+                    await resp.body().bytes(),
+                    flush: true,
+                  );
+                }
+                await _wechat.shareFile(
+                  scene: WechatScene.SESSION,
+                  title: '测试文件',
+                  fileUri: Uri.file(saveFile.path),
+                  fileExtension: path.extension(saveFile.path),
+                );
+              }
+            },
+          ),
+          ListTile(
             title: const Text('Emoji分享'),
             onTap: () async {
               OkHttpClient client = OkHttpClientBuilder().build();
@@ -266,7 +293,7 @@ class _HomeState extends State<Home> {
             onTap: () {
               _wechat.launchMiniProgram(
                 userName: WECHAT_MINIAPPID,
-                path: "page/page/index?uid=123",
+                path: 'page/page/index?uid=123',
                 type: WechatMiniProgram.preview,
               );
             },
@@ -277,7 +304,7 @@ class _HomeState extends State<Home> {
   }
 
   void _showTips(String title, String content) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -335,15 +362,12 @@ class _QrauthState extends State<Qrauth> {
 
   @override
   void dispose() {
-    if (_authGotQrcode != null) {
-      _authGotQrcode.cancel();
-    }
-    if (_authQrcodeScanned != null) {
-      _authQrcodeScanned.cancel();
-    }
-    if (_authFinish != null) {
-      _authFinish.cancel();
-    }
+    _authGotQrcode?.cancel();
+    _authGotQrcode = null;
+    _authQrcodeScanned?.cancel();
+    _authQrcodeScanned = null;
+    _authFinish?.cancel();
+    _authFinish = null;
     super.dispose();
   }
 
@@ -369,7 +393,7 @@ class _QrauthState extends State<Qrauth> {
                   'accessToken: ${ticket.errcode} - ${ticket.errmsg} - ${ticket.ticket}');
               await widget.wechat.startQrauth(
                 appId: WECHAT_APPID,
-                scope: WechatScope.SNSAPI_USERINFO,
+                scope: <String>[WechatScope.SNSAPI_USERINFO],
                 ticket: ticket.ticket,
               );
             },

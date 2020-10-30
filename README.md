@@ -1,21 +1,20 @@
 # wechat_kit
 
-[![Build Status](https://cloud.drone.io/api/badges/v7lin/fake_wechat/status.svg)](https://cloud.drone.io/v7lin/fake_wechat)
-[![Codecov](https://codecov.io/gh/v7lin/fake_wechat/branch/master/graph/badge.svg)](https://codecov.io/gh/v7lin/fake_wechat)
-[![GitHub Tag](https://img.shields.io/github/tag/v7lin/fake_wechat.svg)](https://github.com/v7lin/fake_wechat/releases)
+[![Build Status](https://cloud.drone.io/api/badges/v7lin/wechat_kit/status.svg)](https://cloud.drone.io/v7lin/wechat_kit)
+[![Codecov](https://codecov.io/gh/v7lin/wechat_kit/branch/master/graph/badge.svg)](https://codecov.io/gh/v7lin/wechat_kit)
+[![GitHub Tag](https://img.shields.io/github/tag/v7lin/wechat_kit.svg)](https://github.com/v7lin/wechat_kit/releases)
 [![Pub Package](https://img.shields.io/pub/v/wechat_kit.svg)](https://pub.dartlang.org/packages/wechat_kit)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/v7lin/fake_wechat/blob/master/LICENSE)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/v7lin/wechat_kit/blob/master/LICENSE)
 
 flutter版微信SDK
 
 ## flutter toolkit
 
-* [flutter版微信SDK](https://github.com/v7lin/fake_wechat)
-* [flutter版腾讯(QQ)SDK](https://github.com/v7lin/fake_tencent)
-* [flutter版新浪微博SDK](https://github.com/v7lin/fake_weibo)
-* [flutter版支付宝SDK](https://github.com/v7lin/fake_alipay)
-* [flutter版腾讯(信鸽)推送SDK](https://github.com/v7lin/fake_push)
-* [flutter版talkingdata移动统计SDK](https://github.com/v7lin/fake_analytics)
+* [flutter版微信SDK](https://github.com/v7lin/wechat_kit)
+* [flutter版腾讯(QQ)SDK](https://github.com/v7lin/tencent_kit)
+* [flutter版新浪微博SDK](https://github.com/v7lin/weibo_kit)
+* [flutter版支付宝SDK](https://github.com/v7lin/alipay_kit)
+* [flutter版walle渠道打包工具](https://github.com/v7lin/walle_kit)
 
 ## dart/flutter 私服
 
@@ -66,6 +65,8 @@ keytool -list -v -keystore example/android/app/infos/dev.jks -storepass 123456 2
 
 ## ios
 
+> 暂不支持 SceneDelegate 见文档[微信-iOS接入指南](https://developers.weixin.qq.com/doc/oplatform/Mobile_App/Access_Guide/iOS.html)
+
 ```
 在Xcode中，选择你的工程设置项，选中“TARGETS”一栏，在“info”标签栏的“URL type“添加“URL scheme”为你所注册的应用程序id
 
@@ -102,7 +103,7 @@ Capabilities -> Associated Domain -> Domain -> applinks:${your applinks}
 dependencies:
   wechat_kit:
     git:
-      url: https://github.com/v7lin/fake_wechat.git
+      url: https://github.com/v7lin/wechat_kit.git
 ```
 
 * release
