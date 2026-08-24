@@ -1,4 +1,12 @@
 重要!
+SDK2.0.6
+1. 将全局CFURLCreateStringByAddingPercentEscapes替换成stringByAddingPercentEncodingWithAllowedCharacters
+2. 增加支付接口 PayReq、JointPayReq 的调用信息上报
+
+SDK2.0.5
+1. 优化XCFramework打包方式
+2. 修复openWXApp偶现失败的问题
+
 SDK2.0.4
 1.增加privacy manifest文件
 2.修复跳微信时可能卡顿的问题

@@ -34,8 +34,8 @@ Pod::Spec.new do |s|
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Your Company' => 'email@example.com' }
   s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*'
-  s.public_header_files = 'Classes/**/*.h'
+  s.source_files = 'wechat_kit/Sources/wechat_kit/**/*.{h,m}'
+  s.public_header_files = 'wechat_kit/Sources/wechat_kit/include/**/*.h'
   s.dependency 'Flutter'
   s.platform = :ios, '11.0'
 
@@ -43,7 +43,7 @@ Pod::Spec.new do |s|
   s.default_subspecs = wechat_kit_subspec, 'vendor'
 
   s.resource_bundles = {
-    'wechat_kit' => ['Resources/*']
+    'wechat_kit' => ['wechat_kit/Sources/wechat_kit/PrivacyInfo.xcprivacy']
   }
 
   s.subspec 'pay' do |sp|
@@ -51,7 +51,7 @@ Pod::Spec.new do |s|
   end
 
   s.subspec 'no_pay' do |sp|
-    sp.vendored_frameworks = 'Libraries/NoPay/*.xcframework'
+    sp.vendored_frameworks = 'wechat_kit/Libraries/NoPay/*.xcframework'
     sp.pod_target_xcconfig = {
         'GCC_PREPROCESSOR_DEFINITIONS' => 'NO_PAY=1',
     }
