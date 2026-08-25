@@ -73,12 +73,18 @@ SHA256: ea3a9bee3c8b6c96315fb9095258520575e22a6d5ac2c07f074fea9031db58d8
 
 ### iOS
 
-> 暂不支持 SceneDelegate，详见文档 [微信-iOS接入指南](https://developers.weixin.qq.com/doc/oplatform/Mobile_App/Access_Guide/iOS.html)
+使用 CocoaPods 时不需要额外配置，`wechat_setup.rb` 会根据 `pubspec.yaml` 自动更新 Runner 工程。
 
-```
-# 不需要做任何额外接入工作
-# 配置已集成到脚本里
-```
+使用 SwiftPM 时不会执行 CocoaPods 的配置脚本，需要在 Runner target 中手动完成以下配置：
+
+* 在 URL Types 中添加以微信 `app_id` 为 URL Scheme 的条目
+* 在 `LSApplicationQueriesSchemes` 中添加 `weixin`、`weixinULAPI` 和 `weixinURLParamsAPI`
+* 在 `NSAppTransportSecurity` 中启用 `NSAllowsArbitraryLoads`
+* 在 Signing & Capabilities 的 Associated Domains 中添加 `applinks:${your applinks domain}`
+
+> 支持 Flutter 的 `UIScene` 生命周期（Flutter 3.38.1+）。使用 Scene 的 iOS 工程需按 Flutter 的迁移指引配置 `FlutterSceneDelegate`，以便将 URL 和 Universal Link 回调转发给插件。
+
+> SwiftPM 要求 iOS 13.0+，默认使用不含支付功能的微信 SDK；需要支付功能时请使用 CocoaPods 默认配置。
 
 * Universal Links
 
