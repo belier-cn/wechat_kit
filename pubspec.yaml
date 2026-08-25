@@ -7,7 +7,7 @@ issue_tracker: https://github.com/RxReader/wechat_kit/issues
 
 environment:
   sdk: '>=3.0.2 <4.0.0'
-  flutter: ">=3.3.0"
+  flutter: ">=3.38.1"
 
 dependencies:
   flutter:

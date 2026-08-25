@@ -4,7 +4,8 @@
 
 typedef void (^WechatKitWXReqRunnable)(void);
 
-@interface WechatKitPlugin () <WXApiDelegate, WechatAuthAPIDelegate>
+@interface WechatKitPlugin () <WXApiDelegate, WechatAuthAPIDelegate,
+                                FlutterSceneLifeCycleDelegate>
 
 @end
 
@@ -23,6 +24,9 @@ typedef void (^WechatKitWXReqRunnable)(void);
     WechatKitPlugin *instance = [[WechatKitPlugin alloc] init];
     [instance setMethodChannel:channel];
     [registrar addApplicationDelegate:instance];
+    if (@available(iOS 13.0, *)) {
+        [registrar addSceneDelegate:instance];
+    }
     [registrar addMethodCallDelegate:instance channel:channel];
 }
 
@@ -120,7 +124,7 @@ typedef void (^WechatKitWXReqRunnable)(void);
                 // do nothing
             }];
     } else if ([type intValue] == 1) {
-        UIViewController *viewController = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
+        UIViewController *viewController = [self rootViewController];
         [WXApi sendAuthReq:req
             viewController:viewController
                   delegate:self
@@ -129,6 +133,29 @@ typedef void (^WechatKitWXReqRunnable)(void);
                 }];
     }
     result(nil);
+}
+
+- (UIViewController *)rootViewController {
+    if (@available(iOS 13.0, *)) {
+        for (UIScene *scene in UIApplication.sharedApplication.connectedScenes) {
+            if (![scene isKindOfClass:[UIWindowScene class]] ||
+                scene.activationState == UISceneActivationStateUnattached) {
+                continue;
+            }
+            for (UIWindow *window in ((UIWindowScene *)scene).windows) {
+                if (window.isKeyWindow && window.rootViewController != nil) {
+                    return window.rootViewController;
+                }
+            }
+        }
+    }
+
+    NSObject *applicationDelegate = (NSObject *)UIApplication.sharedApplication.delegate;
+    if ([applicationDelegate respondsToSelector:@selector(window)]) {
+        UIWindow *window = [applicationDelegate valueForKey:@"window"];
+        return window.rootViewController;
+    }
+    return nil;
 }
 
 - (void)handleQRAuthCall:(FlutterMethodCall *)call
@@ -389,6 +416,22 @@ typedef void (^WechatKitWXReqRunnable)(void);
 - (BOOL)application:(UIApplication *)application
     continueUserActivity:(NSUserActivity *)userActivity
       restorationHandler:(void (^)(NSArray *_Nonnull))restorationHandler {
+    return [WXApi handleOpenUniversalLink:userActivity delegate:self];
+}
+
+#pragma mark - SceneDelegate
+
+- (BOOL)scene:(UIScene *)scene
+    openURLContexts:(NSSet<UIOpenURLContext *> *)URLContexts API_AVAILABLE(ios(13.0)) {
+    BOOL handled = NO;
+    for (UIOpenURLContext *context in URLContexts) {
+        handled = [WXApi handleOpenURL:context.URL delegate:self] || handled;
+    }
+    return handled;
+}
+
+- (BOOL)scene:(UIScene *)scene
+    continueUserActivity:(NSUserActivity *)userActivity API_AVAILABLE(ios(13.0)) {
     return [WXApi handleOpenUniversalLink:userActivity delegate:self];
 }
 
