@@ -63,7 +63,7 @@ android {
 
     dependencies {
         //
-        vendorImplementation 'com.tencent.mm.opensdk:wechat-sdk-android:6.8.24'
+        vendorImplementation 'com.tencent.mm.opensdk:wechat-sdk-android:6.8.40'
 
         testImplementation 'junit:junit:4.13.2'
         testImplementation 'org.mockito:mockito-core:5.0.0'
